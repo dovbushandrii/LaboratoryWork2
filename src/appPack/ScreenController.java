@@ -30,9 +30,8 @@ public class ScreenController {
         return true;
     }
 
-    public Boolean changeScene(Scene newScene, String key){
+    public Boolean setScene(Scene newScene){
         mainStage.setScene(newScene);
-        this.sceneMap.put(key,newScene);
         return true;
     }
 
@@ -44,8 +43,10 @@ public class ScreenController {
         this.mainStage.show();
     }
 
-    public void removeScene(String key){
-        sceneMap.remove(key);
+    public void showStage2(){
+        this.mainStage.setIconified(true);
     }
+
+
 
 }

@@ -1,6 +1,8 @@
 package appPack;
 
 import javafx.application.Application;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
 import javafx.event.EventHandler;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
@@ -21,13 +23,14 @@ import java.util.ArrayList;
 
 
 public class Main extends Application {
-    private static ArrayList<String> notes;
+    private static ArrayList<StringProperty> notes;
     private ScreenController controller;
 
     public static void main(String[] args) {
         notes = new ArrayList<>();
         for(int i = 0; i < 10; i++){
-            notes.add("Andrey");
+            StringProperty line = new SimpleStringProperty("Andrey");
+            notes.add(line);
         }
 
         launch(args);
@@ -54,12 +57,8 @@ public class Main extends Application {
 
         Parent bar = this.constructToolBarLayout();
 
-        TextArea textArea = new TextArea();
-        textArea.setPrefRowCount(Integer.MAX_VALUE);
-        textArea.setPrefColumnCount(15);
-        textArea.setText(notes.get(index));
-        textArea.setWrapText(true);
-        textArea.positionCaret(notes.get(index).length());
+        BindedTextArea textArea = new BindedTextArea(this.notes.get(index));
+        textArea.positionCaret(notes.get(index).get().length());
         textArea.setOnKeyPressed(new EventHandler<KeyEvent>() {
             @Override
             public void handle(KeyEvent keyEvent) {
@@ -73,18 +72,15 @@ public class Main extends Application {
         pane.getChildren().addAll(bar,textArea,btn);
         btn.setMaxSize(200,Double.MAX_VALUE);
         btn.setOnAction(actionEvent ->  {
-            notes.set(index,textArea.getText());
-            controller.removeScene("edit");
-            Parent mainLayout = this.constructMenuLayout(this.notes);
-            Scene mainScene = new Scene(mainLayout, Double.MAX_VALUE, Double.MAX_VALUE);
-            controller.changeScene(mainScene,"main");
+            controller.changeScene("main");;
+            controller.showStage2();
             pane.requestFocus();
         });
 
         return pane;
     }
 
-    private Parent constructMenuLayout(ArrayList<String> notes){
+    private Parent constructMenuLayout(ArrayList<StringProperty> notes){
         VBox pane = new VBox();
         pane.setMaxSize(Double.MAX_VALUE,Double.MAX_VALUE);
         pane.setAlignment(Pos.TOP_CENTER);
@@ -104,16 +100,12 @@ public class Main extends Application {
             Parent mainLayout = this.constructEditLayout(i);
             Scene editScene = new Scene(mainLayout, Double.MAX_VALUE, Double.MAX_VALUE);
 
-            TextArea textArea = new TextArea();
-            textArea.setPrefRowCount(6);
-            textArea.setPrefColumnCount(5);
-            textArea.setText(notes.get(i));
-            textArea.setWrapText(true);
+            BindedTextArea textArea = new BindedTextArea(this.notes.get(i));
             textArea.setOnMouseClicked(new EventHandler<MouseEvent>() {
                 @Override
                 public void handle(MouseEvent mouseEvent) {
-                    controller.changeScene(editScene,"edit");
-                    controller.removeScene("main");
+                    controller.setScene(editScene);
+                    controller.showStage2();
                     pane.requestFocus();
                 }
             });
@@ -153,5 +145,4 @@ public class Main extends Application {
         bar.requestFocus();
         return bar;
     }
-
 }
