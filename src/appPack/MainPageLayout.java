@@ -11,7 +11,7 @@ import javafx.scene.layout.VBox;
 import java.util.ArrayList;
 
 public class MainPageLayout{
-    public static Parent constructLayout(ArrayList<StringProperty> notes, ScreenController controller){
+    public static Parent constructLayout(ArrayList<SingleNote> notes, ScreenController controller){
 
         ScrollPane scrollMenu = new ScrollPane();
         scrollMenu.setMaxSize(Double.MAX_VALUE,Double.MAX_VALUE);
@@ -22,7 +22,7 @@ public class MainPageLayout{
         return scrollMenu;
     }
 
-    private static Parent FillScrollMenu(ArrayList<StringProperty> notes, ScreenController controller){
+    private static Parent FillScrollMenu(ArrayList<SingleNote> notes, ScreenController controller){
         VBox box = new VBox();
         box.setFillWidth(true);
 
@@ -31,7 +31,7 @@ public class MainPageLayout{
             Parent mainLayout = EditPageLayout.constructLayout(notes.get(i),controller);
             Scene editScene = new Scene(mainLayout, 500, 500);
 
-            BindedTextArea textArea = new BindedTextArea(notes.get(i));
+            BindedTextArea textArea = new BindedTextArea(notes.get(i).getNoteProperty());
             textArea.setOnMouseClicked(new EventHandler<MouseEvent>() {
                 @Override
                 public void handle(MouseEvent mouseEvent) {

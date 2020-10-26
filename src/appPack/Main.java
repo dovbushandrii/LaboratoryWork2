@@ -24,14 +24,13 @@ import java.util.ArrayList;
 
 public class Main extends Application {
 
-    private static ArrayList<StringProperty> notes;
+    private static ArrayList<SingleNote> notes;
     private ScreenController controller;
 
     public static void main(String[] args) {
         notes = new ArrayList<>();
         for(int i = 0; i < 10; i++){
-            StringProperty line = new SimpleStringProperty("Andrey" + Integer.toString(i));
-            notes.add(line);
+            notes.add(new SingleNote("Andrey" + Integer.toString(i)));
         }
 
         launch(args);
