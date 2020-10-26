@@ -8,6 +8,7 @@ public class BindedTextArea extends TextArea {
         this.setPrefRowCount(6);
         this.setPrefColumnCount(5);
         this.setWrapText(true);
+        this.setMaxSize(Double.MAX_VALUE,Double.MAX_VALUE);
         this.setText(bindCouple.get());
         this.textProperty().bindBidirectional(bindCouple);
     }

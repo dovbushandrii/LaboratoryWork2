@@ -14,13 +14,12 @@ import javafx.scene.control.TextArea;
 import javafx.scene.control.ToolBar;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
+import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
 import java.util.ArrayList;
-
-
 
 public class Main extends Application {
 
@@ -41,7 +40,7 @@ public class Main extends Application {
         this.controller = new ScreenController(primaryStage);
         this.controller.addScene(this.constructMainScene(),"main");
         this.controller.changeScene("main");
-        this.controller.showStage();
+        primaryStage.show();
     }
 
     private Scene constructMainScene(){
@@ -50,11 +49,58 @@ public class Main extends Application {
         vbox.setAlignment(Pos.TOP_CENTER);
 
         Parent toolBar = this.constructToolBarLayout();
-        Parent mainPage = MainPageLayout.constructLayout(this.notes,this.controller);
+        Parent mainPage = constructMainLayout();
 
         vbox.getChildren().setAll(toolBar,mainPage);
         return new Scene(vbox,this.mainSceneWidth, this.mainSceneHeight);
     }
+
+    public Parent constructMainLayout(){
+
+        ScrollPane scrollMenu = new ScrollPane();
+        scrollMenu.setMaxSize(Double.MAX_VALUE,Double.MAX_VALUE);
+        scrollMenu.setFitToWidth(true);
+
+        scrollMenu.setContent(FillScrollMenu());
+
+        return scrollMenu;
+    }
+
+    private Parent FillScrollMenu(){
+        VBox box = new VBox();
+        box.setFillWidth(true);
+
+        for(int i = 0; i < notes.size(); i++){
+            ScreenController copy = this.controller;
+            SingleNote note = notes.get(i);
+
+            BindedTextArea textArea = new BindedTextArea(notes.get(i).getNoteProperty());
+            textArea.setOnMouseClicked(new EventHandler<MouseEvent>() {
+                @Override
+                public void handle(MouseEvent mouseEvent) {
+                    if(mouseEvent.getButton() == MouseButton.PRIMARY) {
+                        Parent layout = EditPageLayout.constructLayout(note);
+                        Scene editScene = new Scene(layout, 300, 200);
+                        controller.showNewStage(editScene, "Edit note");
+                        cleanList();
+                        controller.setScene(constructMainScene());
+                    }
+                    else if(mouseEvent.getButton() == MouseButton.MIDDLE){
+                        Parent layout = DeletePageLayout.constructLayout(note);
+                        Scene deleteScene = new Scene(layout, 300, 200);
+                        controller.showNewStage(deleteScene, "Delete note");
+                        cleanList();
+                        controller.setScene(constructMainScene());
+                    }
+                    box.requestFocus();
+                }
+            });
+
+            box.getChildren().add(textArea);
+        }
+        return box;
+    }
+
 
     private Parent constructToolBarLayout(){
         ToolBar bar = new ToolBar();
@@ -65,7 +111,7 @@ public class Main extends Application {
         Button AboutBTN = this.aboutButtonConstruct();
 
         bar.getItems().addAll(AddBTN,AboutBTN);
-        bar.requestFocus();
+
         return bar;
     }
 
@@ -74,12 +120,12 @@ public class Main extends Application {
         AddBTN.setOnAction(actionEvent -> {
             SingleNote note = new SingleNote();
             notes.add(note);
-            controller.updateScene(constructMainScene(),"main");
 
-            Parent mainLayout = EditPageLayout.constructLayout(notes.get(notes.size()-1),controller);
-            Scene editScene = new Scene(mainLayout, 500, 500);
-
-            controller.setScene(editScene);
+            Parent mainLayout = EditPageLayout.constructLayout(notes.get(notes.size()-1));
+            Scene editScene = new Scene(mainLayout, 300, 200);
+            controller.showNewStage(editScene,"Adding");
+            cleanList();
+            controller.setScene(constructMainScene());
         });
         return AddBTN;
     }
@@ -92,4 +138,13 @@ public class Main extends Application {
         return AboutBTN;
     }
 
+    private void cleanList(){
+        int i = 0;
+        while(i < this.notes.size()){
+            if(this.notes.get(i).getNoteProperty().get().equals("")){
+                this.notes.remove(i);
+            }
+            else i++;
+        }
+    }
 }

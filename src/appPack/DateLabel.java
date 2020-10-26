@@ -14,4 +14,8 @@ public class DateLabel extends Label {
     public void setCurrentTime(){
         this.textProperty().set(StringFromDateConstructor.fullCurrentDateAndTime());
     }
+
+    public void setDeletedTime() {
+        this.textProperty().set("deleted");
+    }
 }

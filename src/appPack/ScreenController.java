@@ -2,6 +2,7 @@ package appPack;
 
 import javafx.scene.Scene;
 import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 
 import java.util.HashMap;
 
@@ -30,15 +31,15 @@ public class ScreenController {
         return false;
     }
 
-    public void updateScene(Scene scene, String key){
-        if(sceneMap.get(key) != null){
-            sceneMap.remove(key);
-        }
-        sceneMap.put(key,scene);
-    }
 
-    public void showStage() {
-        this.mainStage.show();
+    public void showNewStage(Scene newScene, String title) {
+        Stage stage = new Stage();
+        stage.setTitle(title);
+        stage.initStyle(StageStyle.UTILITY);
+        stage.setScene(newScene);
+        stage.setAlwaysOnTop(true);
+        stage.requestFocus();
+        stage.showAndWait();
     }
 
 
