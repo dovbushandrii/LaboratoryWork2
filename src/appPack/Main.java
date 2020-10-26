@@ -26,13 +26,11 @@ public class Main extends Application {
 
     private static ArrayList<SingleNote> notes;
     private ScreenController controller;
+    private Integer mainSceneWidth = 500;
+    private Integer mainSceneHeight = 500;
 
     public static void main(String[] args) {
         notes = new ArrayList<>();
-        for(int i = 0; i < 10; i++){
-            notes.add(new SingleNote("Andrey" + Integer.toString(i)));
-        }
-
         launch(args);
     }
 
@@ -55,23 +53,43 @@ public class Main extends Application {
         Parent mainPage = MainPageLayout.constructLayout(this.notes,this.controller);
 
         vbox.getChildren().setAll(toolBar,mainPage);
-         return new Scene(vbox, 500,500);
+        return new Scene(vbox,this.mainSceneWidth, this.mainSceneHeight);
     }
 
     private Parent constructToolBarLayout(){
         ToolBar bar = new ToolBar();
         bar.setMaxHeight(200);
-        Button SettingsBTN = new Button("Settings");
-        SettingsBTN.setOnAction(actionEvent -> {
-            bar.requestFocus();
-        });
-        Button AboutBTN = new Button("About");
-        AboutBTN.setOnAction(actionEvent -> {
-            bar.requestFocus();
-        });
 
-        bar.getItems().addAll(SettingsBTN,AboutBTN);
+        Button AddBTN = this.addButtonConstruct();
+
+        Button AboutBTN = this.aboutButtonConstruct();
+
+        bar.getItems().addAll(AddBTN,AboutBTN);
         bar.requestFocus();
         return bar;
     }
+
+    private Button addButtonConstruct(){
+        Button AddBTN = new Button("Add Note");
+        AddBTN.setOnAction(actionEvent -> {
+            SingleNote note = new SingleNote();
+            notes.add(note);
+            controller.updateScene(constructMainScene(),"main");
+
+            Parent mainLayout = EditPageLayout.constructLayout(notes.get(notes.size()-1),controller);
+            Scene editScene = new Scene(mainLayout, 500, 500);
+
+            controller.setScene(editScene);
+        });
+        return AddBTN;
+    }
+
+    private Button aboutButtonConstruct(){
+        Button AboutBTN = new Button("About");
+        AboutBTN.setOnAction(actionEvent -> {
+
+        });
+        return AboutBTN;
+    }
+
 }

@@ -32,16 +32,19 @@ public class EditPageLayout {
                 }
             }
         });
+
+
         Button btn = new Button("Save");
         btn.setMaxSize(200,Double.MAX_VALUE);
         btn.setOnAction(actionEvent ->  {
-            if(oldNote.equals(textArea.getText())){
-                textArea.setText("NOT CHANGED");
+            if(!oldNote.equals(textArea.getText())){
+                label.setCurrentTime();
             }
-            else label.setCurrentTime();
             controller.changeScene("main");;
             pane.requestFocus();
         });
+
+
         pane.getChildren().addAll(label,textArea,btn);
         return pane;
     }

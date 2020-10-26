@@ -27,21 +27,23 @@ public class MainPageLayout{
         box.setFillWidth(true);
 
         for(int i = 0; i < notes.size(); i++){
-
-            Parent mainLayout = EditPageLayout.constructLayout(notes.get(i),controller);
-            Scene editScene = new Scene(mainLayout, 500, 500);
+            ScreenController copy = controller;
+            SingleNote note = notes.get(i);
 
             BindedTextArea textArea = new BindedTextArea(notes.get(i).getNoteProperty());
             textArea.setOnMouseClicked(new EventHandler<MouseEvent>() {
                 @Override
                 public void handle(MouseEvent mouseEvent) {
+                    Parent mainLayout = EditPageLayout.constructLayout(note,copy);
+                    Scene editScene = new Scene(mainLayout, 500, 500);
                     controller.setScene(editScene);
                     box.requestFocus();
                 }
             });
+
             box.getChildren().add(textArea);
         }
-
         return box;
     }
+
 }

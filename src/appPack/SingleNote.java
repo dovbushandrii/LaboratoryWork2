@@ -7,10 +7,14 @@ public class SingleNote {
     private StringProperty note;
     private StringProperty date;
 
+    public SingleNote(){
+        this.note = new SimpleStringProperty("");
+        this.date = new SimpleStringProperty(StringFromDateConstructor.fullCurrentDateAndTime());
+    }
+
     public SingleNote(String note){
         this.note = new SimpleStringProperty(note);
-        this.date = new SimpleStringProperty("0");
-        this.setCurrentTime();
+        this.date = new SimpleStringProperty(StringFromDateConstructor.fullCurrentDateAndTime());
     }
 
     public StringProperty getNoteProperty(){
@@ -21,7 +25,4 @@ public class SingleNote {
         return this.date;
     }
 
-    public void setCurrentTime(){
-        this.date.set("0.0.0.0.0.0");
-    }
 }

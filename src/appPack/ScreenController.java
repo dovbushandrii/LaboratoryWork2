@@ -13,11 +13,6 @@ public class ScreenController {
     public ScreenController(Stage mainStage){
         this.mainStage = mainStage;
     }
-    public ScreenController(Stage mainStage, Scene main, String key) {
-        this.mainStage = mainStage;
-        mainStage.setScene(main);
-        this.sceneMap.put(key, main);
-    }
 
     public void setScene(Scene newScene) {
         mainStage.setScene(newScene);
@@ -33,6 +28,13 @@ public class ScreenController {
             return true;
         }
         return false;
+    }
+
+    public void updateScene(Scene scene, String key){
+        if(sceneMap.get(key) != null){
+            sceneMap.remove(key);
+        }
+        sceneMap.put(key,scene);
     }
 
     public void showStage() {
