@@ -1,20 +1,48 @@
 package appPack;
 
-import javafx.beans.property.SimpleStringProperty;
-import javafx.beans.property.StringProperty;
+import com.sun.glass.ui.Screen;
 import javafx.event.EventHandler;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
-public class EditPageLayout {
-    public static Parent constructLayout(SingleNote note){
+public class EditPageActivity extends Activity {
 
+    private SingleNote note;
+
+    public EditPageActivity(Stage stage, String title,SingleNote note){
+        this.note = note;
+        this.activityStage = stage;
+        this.title = title;
+    }
+
+    @Override
+    public Object runActivity(){
+        Scene mainScene = this.constructScene();
+        this.activityStage.setTitle(this.title);
+        this.activityStage.setScene(mainScene);
+        this.activityStage.showAndWait();
+        return note;
+    }
+
+    @Override
+    public Object stopActivity(){
+        this.activityStage.close();
+        return note;
+    }
+
+    private Scene constructScene(){
+        Parent layout = this.constructLayout();
+        return new Scene(layout, 300,200);
+    }
+
+    private Parent constructLayout(){
         String oldNote = note.getNoteProperty().get();
 
         VBox pane = new VBox();
