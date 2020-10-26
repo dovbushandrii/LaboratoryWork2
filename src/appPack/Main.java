@@ -41,7 +41,7 @@ public class Main extends Application {
         primaryStage.setTitle("Notepad/Bloknot");
 
         Parent mainLayout = this.constructMenuLayout(this.notes);
-        Scene mainScene = new Scene(mainLayout, Double.MAX_VALUE, Double.MAX_VALUE);
+        Scene mainScene = new Scene(mainLayout, 500, 500);
 
         this.controller = new ScreenController(primaryStage);
         this.controller.addScene(mainScene,"main");
@@ -73,7 +73,6 @@ public class Main extends Application {
         btn.setMaxSize(200,Double.MAX_VALUE);
         btn.setOnAction(actionEvent ->  {
             controller.changeScene("main");;
-            controller.showStage2();
             pane.requestFocus();
         });
 
@@ -98,14 +97,13 @@ public class Main extends Application {
         for(int i = 0; i < notes.size(); i++){
 
             Parent mainLayout = this.constructEditLayout(i);
-            Scene editScene = new Scene(mainLayout, Double.MAX_VALUE, Double.MAX_VALUE);
+            Scene editScene = new Scene(mainLayout, 500, 500);
 
             BindedTextArea textArea = new BindedTextArea(this.notes.get(i));
             textArea.setOnMouseClicked(new EventHandler<MouseEvent>() {
                 @Override
                 public void handle(MouseEvent mouseEvent) {
                     controller.setScene(editScene);
-                    controller.showStage2();
                     pane.requestFocus();
                 }
             });
