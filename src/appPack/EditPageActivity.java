@@ -7,6 +7,7 @@ import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.VBox;
@@ -50,7 +51,10 @@ public class EditPageActivity extends Activity {
         pane.setAlignment(Pos.TOP_CENTER);
         pane.setSpacing(5);
 
-        DateLabel label = new DateLabel(note.getDateProperty());
+        Label label = new Label();
+        label.setText(this.note.getTime());
+        label.setWrapText(true);
+        label.setAlignment(Pos.TOP_CENTER);
 
         BindedTextArea textArea = new BindedTextArea(note.getNoteProperty());
         textArea.positionCaret(note.getNoteProperty().get().length());
@@ -70,7 +74,7 @@ public class EditPageActivity extends Activity {
         btn.setMaxSize(200,Double.MAX_VALUE);
         btn.setOnAction(actionEvent ->  {
             if(!oldNote.equals(textArea.getText())){
-                label.setCurrentTime();
+                note.setCurrentTime();
             }
             Node source = (Node)  actionEvent.getSource();
             Stage stage  = (Stage) source.getScene().getWindow();
