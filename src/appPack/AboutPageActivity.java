@@ -1,22 +1,17 @@
 package appPack;
 
-
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import javafx.scene.input.KeyCode;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
-public class EditPageActivity extends Activity {
+public class AboutPageActivity extends Activity{
 
-    private final SingleNote note;
-
-    public EditPageActivity(Stage stage, String title,SingleNote note){
-        this.note = note;
+    public AboutPageActivity(Stage stage, String title){
         this.activityStage = stage;
         this.title = title;
     }
@@ -27,22 +22,21 @@ public class EditPageActivity extends Activity {
         this.activityStage.setTitle(this.title);
         this.activityStage.setScene(mainScene);
         this.activityStage.showAndWait();
-        return note;
+        return null;
     }
 
     @Override
     public Object stopActivity(){
         this.activityStage.close();
-        return note;
+        return null;
     }
 
     private Scene constructScene(){
         Parent layout = this.constructLayout();
-        return new Scene(layout, 300,200);
+        return new Scene(layout, 300,300);
     }
 
     private Parent constructLayout(){
-        String oldNote = note.getNoteProperty().get();
 
         VBox pane = new VBox();
         pane.setMaxSize(Double.MAX_VALUE,Double.MAX_VALUE);
@@ -50,34 +44,27 @@ public class EditPageActivity extends Activity {
         pane.setSpacing(5);
 
         Label label = new Label();
-        label.setText(this.note.getTimeString());
+        String text = "\n\nShort instructions:\n" +
+                "To add note - use Add note button\n" +
+                "To delete note - click middle button on " +
+                "note that should be deleted\n\n" +
+                "Empty notes will be deleted automatically\n\n" +
+                "Done by Andrii Dovbush, K-29";
+
+        label.setText(text);
+        label.setAlignment(Pos.CENTER);
         label.setWrapText(true);
-        label.setAlignment(Pos.TOP_CENTER);
-
-        BindedTextArea textArea = new BindedTextArea(note.getNoteProperty());
-        textArea.positionCaret(note.getNoteProperty().get().length());
-        textArea.setPrefRowCount(Integer.MAX_VALUE);
-        textArea.setPrefColumnCount(Integer.MAX_VALUE);
-        textArea.setOnKeyPressed(keyEvent -> {
-            if(keyEvent.getCode() == KeyCode.ESCAPE){
-                pane.requestFocus();
-            }
-        });
 
 
-        Button btn = new Button("Save");
+        Button btn= new Button("Get it!");
         btn.setMaxSize(200,Double.MAX_VALUE);
         btn.setOnAction(actionEvent ->  {
-            if(!oldNote.equals(textArea.getText())){
-                note.setCurrentTime();
-            }
             Node source = (Node)  actionEvent.getSource();
             Stage stage  = (Stage) source.getScene().getWindow();
             stage.close();
         });
 
-        pane.getChildren().addAll(label,textArea,btn);
+        pane.getChildren().addAll(label,btn);
         return pane;
     }
-
 }

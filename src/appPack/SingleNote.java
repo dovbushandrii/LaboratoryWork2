@@ -23,7 +23,9 @@ public class SingleNote {
         return this.note;
     }
 
-    public String getTime() {
+    public LocalDateTime getLocaldatetime() {return this.time;}
+
+    public String getTimeString() {
         return StringFromDateConstructor.dateAndTimeToString(this.time);
     }
 

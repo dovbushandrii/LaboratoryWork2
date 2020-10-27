@@ -1,7 +1,5 @@
 package appPack;
 
-import javafx.beans.property.SimpleStringProperty;
-import javafx.beans.property.StringProperty;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.Parent;
@@ -49,7 +47,7 @@ public class DeletePageActivity extends Activity{
         pane.setSpacing(5);
 
         Label label = new Label();
-        label.setText("Are you sure?");
+        label.setText("\n\nAre you sure?");
 
         Button btnYES = new Button("Yes");
         btnYES.setMaxSize(200,Double.MAX_VALUE);

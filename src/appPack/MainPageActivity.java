@@ -105,7 +105,7 @@ public class MainPageActivity extends Activity{
     private Button addButtonConstruct() {
         Button AddBTN = new Button("Add Note");
         AddBTN.setOnAction(actionEvent -> {
-            EditPageActivity editPageActivity = new EditPageActivity(new Stage(),"Add note",new SingleNote());
+            Activity editPageActivity = new EditPageActivity(new Stage(),"Add note",new SingleNote());
             notes.add((SingleNote)editPageActivity.runActivity());
             cleanList();
             notes = Sorter.sortByDate(notes);
@@ -117,7 +117,9 @@ public class MainPageActivity extends Activity{
     private Button aboutButtonConstruct() {
         Button AboutBTN = new Button("About");
         AboutBTN.setOnAction(actionEvent -> {
-
+            Activity aboutPageActivity = new AboutPageActivity(new Stage(), "About");
+            aboutPageActivity.runActivity();
+            this.activityStage.setScene(this.constructScene());
         });
         return AboutBTN;
     }
