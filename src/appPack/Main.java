@@ -11,6 +11,12 @@ public class Main extends Application {
         launch(args);
     }
 
+    /**
+     * Overload of start method of JavaFx
+     * Runs MainPage Activity.
+     * @param primaryStage
+     * @throws Exception
+     */
     @Override
     public void start(Stage primaryStage) throws Exception {
         ArrayList<SingleNote> notes = new ArrayList<>();

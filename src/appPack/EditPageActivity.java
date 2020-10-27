@@ -11,16 +11,52 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
+/**
+ * DeletePageActivity - class that can create
+ * window for the editing of node confirmation.
+ * Returns edited SingleNote object.
+ * In note was not edited, time of last edit
+ * wont be updated.
+ */
 public class EditPageActivity extends Activity {
 
+    /**
+     * Size of window that creates this activity.
+     */
+    private int widthOfScene = 300;
+    private int heightOfScene = 200;
+
+    /**
+     * @note - result of EditPageActivity.
+     * Returns edited note. In note was not edited,
+     * time of last edit wont be updated.
+     * If note is empty, it will be removed
+     * after Activity stop.
+     */
     private final SingleNote note;
 
+    /**
+     * Constructs object of EditPageActivity.
+     *
+     * @param stage - stage of activity
+     * @param title - title of window
+     * @param note  - note that can be edited.
+     */
     public EditPageActivity(Stage stage, String title, SingleNote note) {
         this.note = note;
         this.activityStage = stage;
         this.title = title;
     }
 
+    /**
+     * Main method to start activity.
+     * As result returns edited note. In note was not edited,
+     * time of last edit wont be updated.
+     * If note is empty, it will be removed
+     * after Activity stop.
+     *
+     * @return - returns result of activity.
+     */
     @Override
     public Object runActivity() {
         Scene mainScene = this.constructScene();
@@ -30,17 +66,39 @@ public class EditPageActivity extends Activity {
         return note;
     }
 
+    /**
+     * Closes the window that was created
+     * by runActivity() method.
+     */
     @Override
     public Object stopActivity() {
         this.activityStage.close();
         return note;
     }
 
+    /**
+     * Constructs scene with width = widthOfScene,
+     * and height = heightOfScene
+     * and layout that object constructs
+     * by constructLayout() method.
+     * That scene will be set on stage that
+     * object got by Constructor.
+     *
+     * @return - returns constructed Scene.
+     */
     private Scene constructScene() {
         Parent layout = this.constructLayout();
-        return new Scene(layout, 300, 200);
+        return new Scene(layout, this.widthOfScene, this.heightOfScene);
     }
 
+    /**
+     * Constructs layout of scene.
+     * Contains only Date&Time of note (Label)
+     * and button "Save"
+     * to confirm edit.
+     *
+     * @return - returns constructed layout(Parent)
+     */
     private Parent constructLayout() {
         String oldNote = note.getNoteProperty().get();
 

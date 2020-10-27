@@ -13,6 +13,16 @@ import java.util.ArrayList;
 
 public class MainPageActivity extends Activity {
 
+    /**
+     * Size of window that creates this activity.
+     */
+    private int widthOfScene = 500;
+    private int heightOfScene = 500;
+
+    /**
+     * @notes - List of SingleNote objects
+     * Contains all active notes.
+     */
     private ArrayList<SingleNote> notes;
 
     public MainPageActivity(Stage stage, String title, ArrayList<SingleNote> notes) {
@@ -23,7 +33,7 @@ public class MainPageActivity extends Activity {
 
     @Override
     public Object runActivity() {
-        Scene mainScene = this.constructScene(500, 500);
+        Scene mainScene = this.constructScene(widthOfScene, heightOfScene);
         this.activityStage.setTitle(this.title);
         this.activityStage.setScene(mainScene);
         this.activityStage.show();

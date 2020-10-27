@@ -19,7 +19,13 @@ import javafx.stage.Stage;
 public class DeletePageActivity extends Activity {
 
     /**
-     * @note - result fo DeletePageActivity.
+     * Size of window that creates this activity.
+     */
+    private int widthOfScene = 300;
+    private int heightOfScene = 200;
+
+    /**
+     * @note - result of DeletePageActivity.
      * Can be empty or as it was given in
      * Constructor.
      */
@@ -76,11 +82,29 @@ public class DeletePageActivity extends Activity {
         return this.note;
     }
 
+    /**
+     * Constructs scene with width = widthOfScene,
+     * and height = heightOfScene
+     * and layout that object constructs
+     * by constructLayout() method.
+     * That scene will be set on stage that
+     * object got by Constructor.
+     *
+     * @return - returns constructed Scene.
+     */
     private Scene constructScene() {
         Parent layout = this.constructLayout();
-        return new Scene(layout, 300, 200);
+        return new Scene(layout, this.widthOfScene, this.heightOfScene);
     }
 
+    /**
+     * Constructs layout of scene.
+     * Contains only text (Label)
+     * and buttons "Yes" and "No"
+     * to confirm or not deleting of note.
+     *
+     * @return - returns constructed layout(Parent)
+     */
     private Parent constructLayout() {
 
         VBox pane = new VBox();
