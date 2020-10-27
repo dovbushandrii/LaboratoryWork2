@@ -1,6 +1,6 @@
 package appPack;
 
-import javafx.event.EventHandler;
+
 import javafx.geometry.Pos;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -8,7 +8,6 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.ToolBar;
 import javafx.scene.input.MouseButton;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
@@ -67,26 +66,21 @@ public class MainPageActivity extends Activity{
         box.setFillWidth(true);
 
         for (int i = 0; i < notes.size(); i++) {
-            Integer index = i;
+            int index = i;
             BindedTextArea textArea = new BindedTextArea(notes.get(i).getNoteProperty());
-            textArea.setOnMouseClicked(new EventHandler<MouseEvent>() {
-                @Override
-                public void handle(MouseEvent mouseEvent) {
-                    if (mouseEvent.getButton() == MouseButton.PRIMARY) {
-                        EditPageActivity editPageActivity = new EditPageActivity(new Stage(),"Edit note",notes.get(index));
-                        notes.set(index,(SingleNote)editPageActivity.runActivity());
-                        cleanList();
-                        notes = Sorter.sortByDate(notes);
-                        activityStage.setScene(constructScene());
-                    } else if (mouseEvent.getButton() == MouseButton.MIDDLE) {
-                        DeletePageActivity deletePageActivity = new DeletePageActivity(new Stage(),"Delete note",notes.get(index));
-                        notes.set(index,(SingleNote)deletePageActivity.runActivity());
-                        cleanList();
-                        notes = Sorter.sortByDate(notes);
-                        activityStage.setScene(constructScene());
-                    }
-                    box.requestFocus();
+            textArea.setOnMouseClicked(mouseEvent -> {
+                if (mouseEvent.getButton() == MouseButton.PRIMARY) {
+                    EditPageActivity editPageActivity = new EditPageActivity(new Stage(),"Edit note",notes.get(index));
+                    notes.set(index,(SingleNote)editPageActivity.runActivity());
                 }
+                else if (mouseEvent.getButton() == MouseButton.MIDDLE) {
+                    DeletePageActivity deletePageActivity = new DeletePageActivity(new Stage(),"Delete note",notes.get(index));
+                    notes.set(index,(SingleNote)deletePageActivity.runActivity());
+                }
+                cleanList();
+                notes = Sorter.sortByDate(notes);
+                activityStage.setScene(constructScene());
+                box.requestFocus();
             });
 
             box.getChildren().add(textArea);

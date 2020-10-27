@@ -1,7 +1,6 @@
 package appPack;
 
-import com.sun.glass.ui.Screen;
-import javafx.event.EventHandler;
+
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.Parent;
@@ -9,13 +8,12 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.input.KeyCode;
-import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
 public class EditPageActivity extends Activity {
 
-    private SingleNote note;
+    private final SingleNote note;
 
     public EditPageActivity(Stage stage, String title,SingleNote note){
         this.note = note;
@@ -60,12 +58,9 @@ public class EditPageActivity extends Activity {
         textArea.positionCaret(note.getNoteProperty().get().length());
         textArea.setPrefRowCount(Integer.MAX_VALUE);
         textArea.setPrefColumnCount(Integer.MAX_VALUE);
-        textArea.setOnKeyPressed(new EventHandler<KeyEvent>() {
-            @Override
-            public void handle(KeyEvent keyEvent) {
-                if(keyEvent.getCode() == KeyCode.ESCAPE){
-                    pane.requestFocus();
-                }
+        textArea.setOnKeyPressed(keyEvent -> {
+            if(keyEvent.getCode() == KeyCode.ESCAPE){
+                pane.requestFocus();
             }
         });
 

@@ -6,7 +6,7 @@ import javafx.beans.property.StringProperty;
 import java.time.LocalDateTime;
 
 public class SingleNote {
-    private StringProperty note;
+    private final StringProperty note;
     private LocalDateTime time;
 
     public SingleNote(){
