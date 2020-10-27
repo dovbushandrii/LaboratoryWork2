@@ -4,28 +4,26 @@ package appPack;
 import javafx.geometry.Pos;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.ScrollPane;
-import javafx.scene.control.ToolBar;
+import javafx.scene.control.*;
 import javafx.scene.input.MouseButton;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
 import java.util.ArrayList;
 
-public class MainPageActivity extends Activity{
+public class MainPageActivity extends Activity {
 
     private ArrayList<SingleNote> notes;
 
-    public MainPageActivity(Stage stage, String title,ArrayList<SingleNote> notes){
+    public MainPageActivity(Stage stage, String title, ArrayList<SingleNote> notes) {
         this.notes = notes;
         this.activityStage = stage;
         this.title = title;
     }
 
     @Override
-    public Object runActivity(){
-        Scene mainScene = this.constructScene();
+    public Object runActivity() {
+        Scene mainScene = this.constructScene(500, 500);
         this.activityStage.setTitle(this.title);
         this.activityStage.setScene(mainScene);
         this.activityStage.show();
@@ -33,12 +31,12 @@ public class MainPageActivity extends Activity{
     }
 
     @Override
-    public Object stopActivity(){
+    public Object stopActivity() {
         this.activityStage.close();
         return this.notes;
     }
 
-    private Scene constructScene() {
+    private Scene constructScene(double width, double height) {
         VBox vbox = new VBox();
         vbox.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
         vbox.setAlignment(Pos.TOP_CENTER);
@@ -47,7 +45,7 @@ public class MainPageActivity extends Activity{
         Parent mainPage = constructMainLayout();
 
         vbox.getChildren().setAll(toolBar, mainPage);
-        return new Scene(vbox, 500,500);
+        return new Scene(vbox, width, height);
     }
 
     private Parent constructMainLayout() {
@@ -66,28 +64,64 @@ public class MainPageActivity extends Activity{
         box.setFillWidth(true);
 
         for (int i = 0; i < notes.size(); i++) {
-            int index = i;
-            BindedTextArea textArea = new BindedTextArea(notes.get(i).getNoteProperty());
-            textArea.setOnMouseClicked(mouseEvent -> {
-                if (mouseEvent.getButton() == MouseButton.PRIMARY) {
-                    EditPageActivity editPageActivity = new EditPageActivity(new Stage(),"Edit note",notes.get(index));
-                    notes.set(index,(SingleNote)editPageActivity.runActivity());
-                }
-                else if (mouseEvent.getButton() == MouseButton.MIDDLE) {
-                    DeletePageActivity deletePageActivity = new DeletePageActivity(new Stage(),"Delete note",notes.get(index));
-                    notes.set(index,(SingleNote)deletePageActivity.runActivity());
-                }
-                cleanList();
-                notes = Sorter.sortByDate(notes);
-                activityStage.setScene(constructScene());
-                box.requestFocus();
-            });
 
-            box.getChildren().add(textArea);
+            Parent dateAndNoteBox = this.constructDateAndNoteBox(i);
+
+            box.getChildren().add(dateAndNoteBox);
         }
         return box;
     }
 
+    private Parent constructDateAndNoteBox(int i) {
+        ContextMenu menu = new ContextMenu();
+
+        MenuItem EditItem = new MenuItem("Edit node");
+        EditItem.setOnAction(actionEvent -> {
+            EditPageActivity editPageActivity = new EditPageActivity(new Stage(), "Edit note", notes.get(i));
+            notes.set(i, (SingleNote) editPageActivity.runActivity());
+
+            cleanList();
+            notes = Sorter.sortByDate(notes);
+            double currWidth = this.activityStage.getScene().getWidth();
+            double currHeight = this.activityStage.getScene().getHeight();
+            this.activityStage.setScene(this.constructScene(currWidth, currHeight));
+
+        });
+
+        MenuItem DeleteItem = new MenuItem("Delete node");
+        DeleteItem.setOnAction(actionEvent -> {
+            DeletePageActivity deletePageActivity = new DeletePageActivity(new Stage(), "Delete note", notes.get(i));
+            notes.set(i, (SingleNote) deletePageActivity.runActivity());
+
+            cleanList();
+            notes = Sorter.sortByDate(notes);
+            double currWidth = this.activityStage.getScene().getWidth();
+            double currHeight = this.activityStage.getScene().getHeight();
+            this.activityStage.setScene(this.constructScene(currWidth, currHeight));
+
+        });
+
+        menu.getItems().setAll(EditItem, DeleteItem);
+
+        BoundTextArea textArea = new BoundTextArea(notes.get(i).getNoteProperty());
+        textArea.setContextMenu(menu);
+        textArea.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
+        textArea.setOnMouseClicked(mouseEvent -> {
+            if (mouseEvent.getButton().equals(MouseButton.PRIMARY)) {
+                EditPageActivity editPageActivity = new EditPageActivity(new Stage(), "Edit note", notes.get(i));
+                notes.set(i, (SingleNote) editPageActivity.runActivity());
+            }
+            cleanList();
+            notes = Sorter.sortByDate(notes);
+            double currWidth = this.activityStage.getScene().getWidth();
+            double currHeight = this.activityStage.getScene().getHeight();
+            this.activityStage.setScene(this.constructScene(currWidth, currHeight));
+            ;
+        });
+
+
+        return textArea;
+    }
 
     private Parent constructToolBarLayout() {
         ToolBar bar = new ToolBar();
@@ -105,11 +139,13 @@ public class MainPageActivity extends Activity{
     private Button addButtonConstruct() {
         Button AddBTN = new Button("Add Note");
         AddBTN.setOnAction(actionEvent -> {
-            Activity editPageActivity = new EditPageActivity(new Stage(),"Add note",new SingleNote());
-            notes.add((SingleNote)editPageActivity.runActivity());
+            Activity editPageActivity = new EditPageActivity(new Stage(), "Add note", new SingleNote());
+            notes.add((SingleNote) editPageActivity.runActivity());
             cleanList();
             notes = Sorter.sortByDate(notes);
-            this.activityStage.setScene(this.constructScene());
+            double currWidth = this.activityStage.getScene().getWidth();
+            double currHeight = this.activityStage.getScene().getHeight();
+            this.activityStage.setScene(this.constructScene(currWidth, currHeight));
         });
         return AddBTN;
     }
@@ -119,7 +155,9 @@ public class MainPageActivity extends Activity{
         AboutBTN.setOnAction(actionEvent -> {
             Activity aboutPageActivity = new AboutPageActivity(new Stage(), "About");
             aboutPageActivity.runActivity();
-            this.activityStage.setScene(this.constructScene());
+            double currWidth = this.activityStage.getScene().getWidth();
+            double currHeight = this.activityStage.getScene().getHeight();
+            this.activityStage.setScene(this.constructScene(currWidth, currHeight));
         });
         return AboutBTN;
     }

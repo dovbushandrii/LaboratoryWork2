@@ -9,27 +9,29 @@ public class SingleNote {
     private final StringProperty note;
     private LocalDateTime time;
 
-    public SingleNote(){
+    public SingleNote() {
         this.note = new SimpleStringProperty("");
         this.time = LocalDateTime.now();
     }
 
-    public SingleNote(String note){
+    public SingleNote(String note) {
         this.note = new SimpleStringProperty(note);
         this.time = LocalDateTime.now();
     }
 
-    public StringProperty getNoteProperty(){
+    public StringProperty getNoteProperty() {
         return this.note;
     }
 
-    public LocalDateTime getLocaldatetime() {return this.time;}
+    public LocalDateTime getLocalDateTime() {
+        return this.time;
+    }
 
     public String getTimeString() {
         return StringFromDateConstructor.dateAndTimeToString(this.time);
     }
 
-    public void setCurrentTime(){
+    public void setCurrentTime() {
         this.time = LocalDateTime.now();
     }
 

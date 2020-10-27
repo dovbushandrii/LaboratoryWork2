@@ -15,14 +15,14 @@ public class EditPageActivity extends Activity {
 
     private final SingleNote note;
 
-    public EditPageActivity(Stage stage, String title,SingleNote note){
+    public EditPageActivity(Stage stage, String title, SingleNote note) {
         this.note = note;
         this.activityStage = stage;
         this.title = title;
     }
 
     @Override
-    public Object runActivity(){
+    public Object runActivity() {
         Scene mainScene = this.constructScene();
         this.activityStage.setTitle(this.title);
         this.activityStage.setScene(mainScene);
@@ -31,21 +31,21 @@ public class EditPageActivity extends Activity {
     }
 
     @Override
-    public Object stopActivity(){
+    public Object stopActivity() {
         this.activityStage.close();
         return note;
     }
 
-    private Scene constructScene(){
+    private Scene constructScene() {
         Parent layout = this.constructLayout();
-        return new Scene(layout, 300,200);
+        return new Scene(layout, 300, 200);
     }
 
-    private Parent constructLayout(){
+    private Parent constructLayout() {
         String oldNote = note.getNoteProperty().get();
 
         VBox pane = new VBox();
-        pane.setMaxSize(Double.MAX_VALUE,Double.MAX_VALUE);
+        pane.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
         pane.setAlignment(Pos.TOP_CENTER);
         pane.setSpacing(5);
 
@@ -54,29 +54,29 @@ public class EditPageActivity extends Activity {
         label.setWrapText(true);
         label.setAlignment(Pos.TOP_CENTER);
 
-        BindedTextArea textArea = new BindedTextArea(note.getNoteProperty());
+        BoundTextArea textArea = new BoundTextArea(note.getNoteProperty());
         textArea.positionCaret(note.getNoteProperty().get().length());
         textArea.setPrefRowCount(Integer.MAX_VALUE);
         textArea.setPrefColumnCount(Integer.MAX_VALUE);
         textArea.setOnKeyPressed(keyEvent -> {
-            if(keyEvent.getCode() == KeyCode.ESCAPE){
+            if (keyEvent.getCode() == KeyCode.ESCAPE) {
                 pane.requestFocus();
             }
         });
 
 
         Button btn = new Button("Save");
-        btn.setMaxSize(200,Double.MAX_VALUE);
-        btn.setOnAction(actionEvent ->  {
-            if(!oldNote.equals(textArea.getText())){
+        btn.setMaxSize(200, Double.MAX_VALUE);
+        btn.setOnAction(actionEvent -> {
+            if (!oldNote.equals(textArea.getText())) {
                 note.setCurrentTime();
             }
-            Node source = (Node)  actionEvent.getSource();
-            Stage stage  = (Stage) source.getScene().getWindow();
+            Node source = (Node) actionEvent.getSource();
+            Stage stage = (Stage) source.getScene().getWindow();
             stage.close();
         });
 
-        pane.getChildren().addAll(label,textArea,btn);
+        pane.getChildren().addAll(label, textArea, btn);
         return pane;
     }
 
