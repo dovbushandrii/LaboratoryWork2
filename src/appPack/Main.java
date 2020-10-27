@@ -14,6 +14,7 @@ public class Main extends Application {
     /**
      * Overload of start method of JavaFx
      * Runs MainPage Activity.
+     *
      * @param primaryStage
      * @throws Exception
      */

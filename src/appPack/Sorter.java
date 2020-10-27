@@ -2,8 +2,18 @@ package appPack;
 
 import java.util.ArrayList;
 
-
+/**
+ * Sorter class for ArrayList<SingleNote>
+ * sort.
+ */
 public class Sorter {
+
+    /**
+     * Sort @list by time of last update.
+     *
+     * @param list - list that needs to be sorted
+     * @return - returns sorted list.
+     */
     public static ArrayList<SingleNote> sortByDate(ArrayList<SingleNote> list) {
         SingleNote temp;
         for (int i = 0; i < list.size(); i++) {

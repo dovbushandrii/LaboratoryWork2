@@ -36,7 +36,7 @@ public class EditPageActivity extends Activity {
     private final SingleNote note;
 
     /**
-     * Constructs object of EditPageActivity.
+     * Constructs an object of EditPageActivity.
      *
      * @param stage - stage of activity
      * @param title - title of window
