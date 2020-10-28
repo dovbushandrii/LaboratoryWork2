@@ -7,6 +7,7 @@ import javafx.scene.control.*;
 import javafx.scene.input.MouseButton;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
+import javafx.util.Pair;
 
 import java.util.ArrayList;
 
@@ -25,16 +26,24 @@ public class MainPageActivity extends Activity {
     private ArrayList<SingleNote> notes;
 
     /**
+     * @archive - List of SingleNote objects
+     * Contains all active notes.
+     */
+    private ArrayList<SingleNote> archive;
+
+    /**
      * Constructs an object of EditPageActivity.
      *
-     * @param stage - stage of activity
-     * @param title - title of window
-     * @param notes - list on notes
+     * @param stage   - stage of activity
+     * @param title   - title of window
+     * @param notes   - list on active notes
+     * @param archive - list of archive notes
      */
-    public MainPageActivity(Stage stage, String title, ArrayList<SingleNote> notes) {
-        this.notes = notes;
+    public MainPageActivity(Stage stage, String title, Pair<ArrayList<SingleNote>,ArrayList<SingleNote>> notesAndArchive) {
+        this.notes = notesAndArchive.getKey();
         this.activityStage = stage;
         this.title = title;
+        this.archive = notesAndArchive.getValue();
     }
 
     /**
@@ -49,7 +58,11 @@ public class MainPageActivity extends Activity {
         this.activityStage.setTitle(this.title);
         this.activityStage.setScene(mainScene);
         this.activityStage.show();
-        return this.notes;
+        if (this.activityStage.getTitle().equals("Notepad/Active Notes")) {
+            return new Pair(this.notes, this.archive);
+        } else {
+            return new Pair(this.archive, this.notes);
+        }
     }
 
     /**
@@ -59,7 +72,11 @@ public class MainPageActivity extends Activity {
     @Override
     public Object stopActivity() {
         this.activityStage.close();
-        return this.notes;
+        if (this.activityStage.getTitle().equals("Notepad/Active Notes")) {
+            return new Pair(this.notes, this.archive);
+        } else {
+            return new Pair(this.archive, this.notes);
+        }
     }
 
     /**
@@ -116,7 +133,7 @@ public class MainPageActivity extends Activity {
     }
 
     /**
-     * Constructs ScrollMenu with all notes.
+     * Constructs ScrollMenu with active notes.
      *
      * @return - returns ScrollPane(Parent).
      */
@@ -136,6 +153,7 @@ public class MainPageActivity extends Activity {
     /**
      * Constructs element of ScrollMenu -
      * NoteBox.
+     * Has custom ContextMenu: Edit,Archive,Delete note.
      *
      * @param i - index of note in @notes
      * @return - returns HBox and Note.
@@ -143,7 +161,7 @@ public class MainPageActivity extends Activity {
     private Parent constructNoteBox(int i) {
         ContextMenu menu = new ContextMenu();
 
-        MenuItem EditItem = new MenuItem("Edit node");
+        MenuItem EditItem = new MenuItem("Edit note");
         EditItem.setOnAction(actionEvent -> {
             EditPageActivity editPageActivity = new EditPageActivity(new Stage(), "Edit note", notes.get(i));
             notes.set(i, (SingleNote) editPageActivity.runActivity());
@@ -151,7 +169,16 @@ public class MainPageActivity extends Activity {
             reconstructStage();
         });
 
-        MenuItem DeleteItem = new MenuItem("Delete node");
+        MenuItem ArchiveItem = new MenuItem("Archive/Unarchive note");
+        ArchiveItem.setOnAction(actionEvent -> {
+
+            archive.add(notes.get(i));
+            notes.set(i, new SingleNote(""));
+
+            reconstructStage();
+        });
+
+        MenuItem DeleteItem = new MenuItem("Delete note");
         DeleteItem.setOnAction(actionEvent -> {
             DeletePageActivity deletePageActivity = new DeletePageActivity(new Stage(), "Delete note", notes.get(i));
             notes.set(i, (SingleNote) deletePageActivity.runActivity());
@@ -159,7 +186,7 @@ public class MainPageActivity extends Activity {
             reconstructStage();
         });
 
-        menu.getItems().setAll(EditItem, DeleteItem);
+        menu.getItems().setAll(EditItem, ArchiveItem, DeleteItem);
 
         BoundTextArea textArea = new BoundTextArea(notes.get(i).getNoteProperty());
         textArea.setContextMenu(menu);
@@ -188,12 +215,15 @@ public class MainPageActivity extends Activity {
 
         Button AddBTN = this.addButtonConstruct();
 
+        Button SwtchBTN = this.switchButtonConstruct();
+
         Button AboutBTN = this.aboutButtonConstruct();
 
-        bar.getItems().addAll(AddBTN, AboutBTN);
+        bar.getItems().addAll(AddBTN, SwtchBTN, AboutBTN);
 
         return bar;
     }
+
 
     /**
      * Constructs Add button for ToolBar.
@@ -205,6 +235,30 @@ public class MainPageActivity extends Activity {
         AddBTN.setOnAction(actionEvent -> {
             Activity editPageActivity = new EditPageActivity(new Stage(), "Add note", new SingleNote());
             notes.add((SingleNote) editPageActivity.runActivity());
+            reconstructStage();
+        });
+        return AddBTN;
+    }
+
+    /**
+     * Constructs switch between archive and
+     * active notes button for ToolBar.
+     * Just simply switches notes list and
+     * archive list.
+     *
+     * @return - returns constructed Button.
+     */
+    private Button switchButtonConstruct() {
+        Button AddBTN = new Button("Switch Active/Archive");
+        AddBTN.setOnAction(actionEvent -> {
+            if (this.activityStage.getTitle().equals("Notepad/Active Notes")) {
+                this.activityStage.setTitle("Notepad/Archive");
+            } else {
+                this.activityStage.setTitle("Notepad/Active Notes");
+            }
+            ArrayList<SingleNote> copy = this.notes;
+            this.notes = this.archive;
+            this.archive = copy;
             reconstructStage();
         });
         return AddBTN;
