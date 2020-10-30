@@ -36,8 +36,7 @@ public class MainPageActivity extends Activity {
      *
      * @param stage   - stage of activity
      * @param title   - title of window
-     * @param notes   - list on active notes
-     * @param archive - list of archive notes
+     * @param notesAndArchive   - list on active notes
      */
     public MainPageActivity(Stage stage, String title, Pair<ArrayList<SingleNote>,ArrayList<SingleNote>> notesAndArchive) {
         this.notes = notesAndArchive.getKey();
