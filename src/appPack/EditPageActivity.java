@@ -1,15 +1,20 @@
 package appPack;
 
 
+import javafx.collections.FXCollections;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Label;
 import javafx.scene.input.KeyCode;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
+
+import javax.swing.event.ChangeListener;
 
 /**
  * DeletePageActivity - class that can create
@@ -93,7 +98,8 @@ public class EditPageActivity extends Activity {
 
     /**
      * Constructs layout of scene.
-     * Contains only Date&Time of note (Label)
+     * Contains only Date&Time of note (Label),
+     * Context type of note menu
      * and button "Save"
      * to confirm edit.
      *
@@ -122,6 +128,7 @@ public class EditPageActivity extends Activity {
             }
         });
 
+        ChoiceBox cb = this.constructContextTypeChoiseBox();
 
         Button btn = new Button("Save");
         btn.setMaxSize(200, Double.MAX_VALUE);
@@ -134,8 +141,43 @@ public class EditPageActivity extends Activity {
             stage.close();
         });
 
-        pane.getChildren().addAll(label, textArea, btn);
+        pane.getChildren().addAll(label, textArea, cb, btn);
         return pane;
     }
 
+    /**
+     * Constructs ChoiseBox with options for
+     * note Context type(WORK,PERSONAL,STUDY)
+     *
+     * @return - returns constructed choice box
+     */
+    private ChoiceBox constructContextTypeChoiseBox(){
+
+        ChoiceBox cb = new ChoiceBox();
+        cb.setItems(FXCollections.observableArrayList(
+                "Personal note","Work note","Study note")
+        );
+        if(this.note.getConType().equals(ContextEnum.PERSONAL)){
+            cb.setValue("Personal note");
+        }
+        else if (this.note.getConType().equals(ContextEnum.WORK)){
+            cb.setValue("Work note");
+        }
+        else if (this.note.getConType().equals(ContextEnum.STUDY)){
+            cb.setValue("Study note");
+        }
+        cb.setOnAction(actionEvent -> {
+            if(cb.getValue().equals("Personal note")){
+                this.note.setConType(ContextEnum.PERSONAL);
+            }
+            else if (cb.getValue().equals("Work note")){
+                this.note.setConType(ContextEnum.WORK);
+            }
+            else if (cb.getValue().equals("Study note")){
+                this.note.setConType(ContextEnum.STUDY);
+            }
+        });
+
+        return cb;
+    }
 }

@@ -1,5 +1,6 @@
 package appPack;
 
+import javafx.collections.FXCollections;
 import javafx.geometry.Pos;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -21,28 +22,42 @@ public class MainPageActivity extends Activity {
 
     /**
      * @notes - List of SingleNote objects
-     * Contains all active notes.
+     * Contains all notes that shown on page.
      */
     private ArrayList<SingleNote> notes;
 
     /**
      * @archive - List of SingleNote objects
-     * Contains all active notes.
+     * Contains all archived notes.
      */
     private ArrayList<SingleNote> archive;
 
     /**
+     * @active - List of SingleNote objects
+     * Contains all active notes.
+     */
+    private ArrayList<SingleNote> active;
+
+    /**
+     * Types of notes shown on page
+     * (ALL,WORK,PERSONAL,STUDY)
+     */
+    private ContextEnum contextType;
+
+    /**
      * Constructs an object of EditPageActivity.
      *
-     * @param stage   - stage of activity
-     * @param title   - title of window
-     * @param notesAndArchive   - list on active notes
+     * @param stage           - stage of activity
+     * @param title           - title of window
+     * @param notesAndArchive - list on active notes
      */
-    public MainPageActivity(Stage stage, String title, Pair<ArrayList<SingleNote>,ArrayList<SingleNote>> notesAndArchive) {
-        this.notes = notesAndArchive.getKey();
+    public MainPageActivity(Stage stage, String title, Pair<ArrayList<SingleNote>, ArrayList<SingleNote>> notesAndArchive) {
+        this.active = notesAndArchive.getKey();
+        this.notes = this.active;
         this.activityStage = stage;
         this.title = title;
         this.archive = notesAndArchive.getValue();
+        this.contextType = ContextEnum.ALL;
     }
 
     /**
@@ -58,9 +73,9 @@ public class MainPageActivity extends Activity {
         this.activityStage.setScene(mainScene);
         this.activityStage.show();
         if (this.activityStage.getTitle().equals("Notepad/Active Notes")) {
-            return new Pair(this.notes, this.archive);
+            return new Pair(this.active, this.archive);
         } else {
-            return new Pair(this.archive, this.notes);
+            return new Pair(this.archive, this.active);
         }
     }
 
@@ -72,9 +87,9 @@ public class MainPageActivity extends Activity {
     public Object stopActivity() {
         this.activityStage.close();
         if (this.activityStage.getTitle().equals("Notepad/Active Notes")) {
-            return new Pair(this.notes, this.archive);
+            return new Pair(this.active, this.archive);
         } else {
-            return new Pair(this.archive, this.notes);
+            return new Pair(this.archive, this.active);
         }
     }
 
@@ -107,7 +122,7 @@ public class MainPageActivity extends Activity {
      */
     private void reconstructStage() {
         cleanList();
-        notes = Sorter.sortByDate(notes);
+        notes = Sorter.sortByDateAndContextType(this.active, this.contextType);
         double currWidth = this.activityStage.getScene().getWidth();
         double currHeight = this.activityStage.getScene().getHeight();
         this.activityStage.setScene(this.constructScene(currWidth, currHeight));
@@ -218,7 +233,9 @@ public class MainPageActivity extends Activity {
 
         Button AboutBTN = this.aboutButtonConstruct();
 
-        bar.getItems().addAll(AddBTN, SwtchBTN, AboutBTN);
+        ChoiceBox conTypeCB = this.constructContextTypeChoiseBox();
+
+        bar.getItems().addAll(AddBTN, SwtchBTN, AboutBTN, conTypeCB);
 
         return bar;
     }
@@ -242,7 +259,7 @@ public class MainPageActivity extends Activity {
     /**
      * Constructs switch between archive and
      * active notes button for ToolBar.
-     * Just simply switches notes list and
+     * Just simply switches notes list andg
      * archive list.
      *
      * @return - returns constructed Button.
@@ -255,8 +272,8 @@ public class MainPageActivity extends Activity {
             } else {
                 this.activityStage.setTitle("Notepad/Active Notes");
             }
-            ArrayList<SingleNote> copy = this.notes;
-            this.notes = this.archive;
+            ArrayList<SingleNote> copy = this.active;
+            this.active = this.archive;
             this.archive = copy;
             reconstructStage();
         });
@@ -279,13 +296,56 @@ public class MainPageActivity extends Activity {
     }
 
     /**
-     * Deletes empty notes from @notes.
+     * Constructs ChoiseBox with options for
+     * notes that shown on page.
+     * May be shown:
+     * All notes,Personal notes,
+     * Work notes, Study notes.
+     *
+     * @return - returns constructed choice box
+     */
+    private ChoiceBox constructContextTypeChoiseBox() {
+
+        ChoiceBox cb = new ChoiceBox();
+        cb.setItems(FXCollections.observableArrayList(
+                "All notes", "Personal notes", "Work notes", "Study notes")
+        );
+
+        if (this.contextType.equals(ContextEnum.PERSONAL)) {
+            cb.setValue("Personal notes");
+        } else if (this.contextType.equals(ContextEnum.WORK)) {
+            cb.setValue("Work notes");
+        } else if (this.contextType.equals(ContextEnum.STUDY)) {
+            cb.setValue("Study notes");
+        } else if (this.contextType.equals(ContextEnum.ALL)) {
+            cb.setValue("All notes");
+        }
+
+        cb.setOnAction(actionEvent -> {
+            if (cb.getValue().equals("Personal notes")) {
+                this.contextType = ContextEnum.PERSONAL;
+            } else if (cb.getValue().equals("Work notes")) {
+                this.contextType = ContextEnum.WORK;
+            } else if (cb.getValue().equals("Study notes")) {
+                this.contextType = ContextEnum.STUDY;
+            } else if (cb.getValue().equals("All notes")) {
+                this.contextType = ContextEnum.ALL;
+            }
+            this.reconstructStage();
+        });
+
+        return cb;
+    }
+
+
+    /**
+     * Deletes empty notes from @active.
      */
     private void cleanList() {
         int i = 0;
-        while (i < this.notes.size()) {
-            if (this.notes.get(i).getNoteProperty().get().equals("")) {
-                this.notes.remove(i);
+        while (i < this.active.size()) {
+            if (this.active.get(i).getNoteProperty().get().equals("")) {
+                this.active.remove(i);
             } else i++;
         }
     }

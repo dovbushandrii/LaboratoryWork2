@@ -28,4 +28,18 @@ public class Sorter {
         }
         return list;
     }
+
+    public static ArrayList<SingleNote> sortByDateAndContextType(ArrayList<SingleNote> list, ContextEnum type) {
+        ArrayList<SingleNote> newList = new ArrayList<>();
+        list = sortByDate(list);
+        if (!type.equals(ContextEnum.ALL)) {
+            for (int i = 0; i < list.size(); i++) {
+                if (list.get(i).getConType().equals(type)) {
+                    newList.add(list.get(i));
+                }
+            }
+            return newList;
+        } else return list;
+
+    }
 }

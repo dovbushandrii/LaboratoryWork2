@@ -21,11 +21,18 @@ public class SingleNote {
     private LocalDateTime time;
 
     /**
+     * Type of note: Personal, Work, Study
+     * Default: Personal
+     */
+    private ContextEnum conType;
+
+    /**
      * Constructs empty note.
      */
     public SingleNote() {
         this.note = new SimpleStringProperty("");
         this.time = LocalDateTime.now();
+        this.conType = ContextEnum.PERSONAL;
     }
 
     /**
@@ -34,6 +41,7 @@ public class SingleNote {
     public SingleNote(String note) {
         this.note = new SimpleStringProperty(note);
         this.time = LocalDateTime.now();
+        this.conType = ContextEnum.PERSONAL;
     }
 
 
@@ -43,6 +51,14 @@ public class SingleNote {
 
     public LocalDateTime getLocalDateTime() {
         return this.time;
+    }
+
+    public ContextEnum getConType() {
+        return this.conType;
+    }
+
+    public void setConType(ContextEnum type) {
+        this.conType = type;
     }
 
     /**
