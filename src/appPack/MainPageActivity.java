@@ -1,10 +1,14 @@
 package appPack;
 
+import com.sun.javafx.css.StyleCacheEntry;
 import javafx.collections.FXCollections;
 import javafx.geometry.Pos;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyCodeCombination;
+import javafx.scene.input.KeyCombination;
 import javafx.scene.input.MouseButton;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
@@ -17,8 +21,8 @@ public class MainPageActivity extends Activity {
     /**
      * Size of window that creates this activity.
      */
-    private int widthOfScene = 500;
-    private int heightOfScene = 500;
+    private final int widthOfScene = 500;
+    private final int heightOfScene = 500;
 
     /**
      * @notes - List of SingleNote objects
@@ -113,7 +117,17 @@ public class MainPageActivity extends Activity {
         Parent mainPage = constructMainLayout();
 
         vbox.getChildren().setAll(toolBar, mainPage);
-        return new Scene(vbox, width, height);
+
+        KeyCombination kc = new KeyCodeCombination(KeyCode.A, KeyCombination.CONTROL_DOWN, KeyCombination.SHIFT_DOWN);
+        Runnable rn = ()->{
+            Activity editPageActivity = new EditPageActivity(new Stage(), "Add note", new SingleNote());
+            notes.add((SingleNote) editPageActivity.runActivity());
+            reconstructStage();
+        };
+
+        Scene constructedScene = new Scene(vbox, width, height);
+        constructedScene.getAccelerators().put(kc,rn);
+        return constructedScene;
     }
 
     /**
@@ -231,11 +245,10 @@ public class MainPageActivity extends Activity {
 
         Button SwtchBTN = this.switchButtonConstruct();
 
-        Button AboutBTN = this.aboutButtonConstruct();
 
         ChoiceBox conTypeCB = this.constructContextTypeChoiseBox();
 
-        bar.getItems().addAll(AddBTN, SwtchBTN, AboutBTN, conTypeCB);
+        bar.getItems().addAll(AddBTN, SwtchBTN, conTypeCB);
 
         return bar;
     }
@@ -278,21 +291,6 @@ public class MainPageActivity extends Activity {
             reconstructStage();
         });
         return AddBTN;
-    }
-
-    /**
-     * Constructs About button for ToolBar.
-     *
-     * @return - returns constructed Button.
-     */
-    private Button aboutButtonConstruct() {
-        Button AboutBTN = new Button("About");
-        AboutBTN.setOnAction(actionEvent -> {
-            Activity aboutPageActivity = new AboutPageActivity(new Stage(), "About");
-            aboutPageActivity.runActivity();
-            reconstructStage();
-        });
-        return AboutBTN;
     }
 
     /**
