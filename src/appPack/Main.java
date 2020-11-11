@@ -17,7 +17,7 @@ public class Main extends Application {
      * Runs MainPage Activity.
      *
      * @param primaryStage - main stage of page.
-     * @throws Exception - thro
+     * @throws Exception - throws file opening Exception
      */
     @Override
     public void start(Stage primaryStage) throws Exception {

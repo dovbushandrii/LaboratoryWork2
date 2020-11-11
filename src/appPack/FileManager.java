@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.Scanner;
 
 public class FileManager {
+
     public static Pair<ArrayList<SingleNote>, ArrayList<SingleNote>> readFile(String nameOfFile) throws Exception {
         ArrayList<SingleNote> active = new ArrayList<>();
         ArrayList<SingleNote> archive = new ArrayList<>();
