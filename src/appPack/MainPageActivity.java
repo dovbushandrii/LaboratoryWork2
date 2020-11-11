@@ -75,7 +75,7 @@ public class MainPageActivity extends Activity {
         Scene mainScene = this.constructScene(widthOfScene, heightOfScene);
         this.activityStage.setTitle(this.title);
         this.activityStage.setScene(mainScene);
-        this.activityStage.show();
+        this.activityStage.showAndWait();
         if (this.activityStage.getTitle().equals("Notepad/Active Notes")) {
             return new Pair(this.active, this.archive);
         } else {
@@ -103,6 +103,10 @@ public class MainPageActivity extends Activity {
      * by constructLayout() method.
      * That scene will be set on stage that
      * object got by Constructor.
+     *
+     * To scene is added
+     * local hotkey listener
+     * ctrl+shift+a -> to add note
      *
      * @param width  - width of created scene
      * @param height - height of created scene

@@ -16,15 +16,15 @@ public class Main extends Application {
      * Overload of start method of JavaFx
      * Runs MainPage Activity.
      *
-     * @param primaryStage
-     * @throws Exception
+     * @param primaryStage - main stage of page.
+     * @throws Exception - thro
      */
     @Override
     public void start(Stage primaryStage) throws Exception {
-        ArrayList<SingleNote> notes = new ArrayList<>();
-        ArrayList<SingleNote> archive = new ArrayList<>();
-        Pair<ArrayList<SingleNote>,ArrayList<SingleNote>> notesAndArchive = new Pair<>(notes,archive);
-        Activity mainActivity = new MainPageActivity(primaryStage, "Notepad/Active Notes", notesAndArchive);
-        mainActivity.runActivity();
+        Pair<ArrayList<SingleNote>, ArrayList<SingleNote>> notesAndArchive;
+        notesAndArchive = FileManager.readFile("notesDataBase.txt");
+        Activity mainActivity = new MainPageActivity(new Stage(), "Notepad/Active Notes", notesAndArchive);
+        notesAndArchive = (Pair<ArrayList<SingleNote>, ArrayList<SingleNote>>) mainActivity.runActivity();
+        FileManager.writeToFile("notesDataBase.txt", notesAndArchive);
     }
 }

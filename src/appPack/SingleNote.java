@@ -44,6 +44,15 @@ public class SingleNote {
         this.conType = ContextEnum.PERSONAL;
     }
 
+    /**
+     * Constructs note.
+     */
+    public SingleNote(String date, String note, ContextEnum type) {
+        this.note = new SimpleStringProperty(note);
+        this.time = StringFromDateConstructor.StringToDate(date);
+        this.conType = type;
+    }
+
 
     public StringProperty getNoteProperty() {
         return this.note;

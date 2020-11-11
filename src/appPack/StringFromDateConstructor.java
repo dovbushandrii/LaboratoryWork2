@@ -20,4 +20,15 @@ public class StringFromDateConstructor {
         return dtf.format(time);
     }
 
+    /**
+     * Returns LocalDateTime obj converted from string.
+     *
+     * @param date
+     * @return - returns LocalDateTime object
+     */
+    public static LocalDateTime StringToDate(String date) {
+        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss");
+        return LocalDateTime.parse(date, dtf);
+    }
+
 }
